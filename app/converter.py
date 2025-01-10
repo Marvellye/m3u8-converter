@@ -24,17 +24,14 @@ def convert_m3u8_to_mp4(input_url, output_filename):
     
     process = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     
-    if process.returncode == 0:
-        return output_path
-    else:
-        return None
+    return output_path if process.returncode == 0 else None
 
 def run_conversion(input_url, output_filename):
     output_file = convert_m3u8_to_mp4(input_url, output_filename)
     if output_file:
-        print(f"Conversion complete: {output_file}")
+        print(f"✅ Conversion complete: {output_file}")
     else:
-        print("Conversion failed")
+        print("❌ Conversion failed")
 
 @app.route('/convert', methods=['GET', 'POST'])
 def convert():
@@ -56,7 +53,3 @@ def convert():
         "message": "Conversion started",
         "output_file": f"{OUTPUT_DIR}/{output_filename}"
     })
-
-if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5000)
-  

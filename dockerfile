@@ -1,11 +1,17 @@
+# Use lightweight FFmpeg + Python image
 FROM jrottenberg/ffmpeg:4.4-alpine
 
+# Set work directory
 WORKDIR /app
 
-COPY converter.py /app/converter.py
-COPY requirements.txt /app/requirements.txt
+# Copy files
+COPY . /app
 
+# Install dependencies
 RUN pip install -r requirements.txt
 
-ENTRYPOINT ["python3", "/app/converter.py"]
-  
+# Expose Flask port
+EXPOSE 5000
+
+# Start the server using Gunicorn
+CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "wsgi:app"]

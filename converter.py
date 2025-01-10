@@ -5,19 +5,20 @@ from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
-OUTPUT_DIR = "/app/output"
-os.makedirs(OUTPUT_DIR, exist_ok=True)
+# Store MP4 files locally
+LOCAL_OUTPUT_DIR = os.path.abspath("output")  # Local machine directory
+os.makedirs(LOCAL_OUTPUT_DIR, exist_ok=True)
 
 def convert_m3u8_to_mp4(input_url, output_filename):
-    output_path = os.path.join(OUTPUT_DIR, output_filename)
+    output_path = os.path.join(LOCAL_OUTPUT_DIR, output_filename)
 
     # Optimized FFmpeg command for speed
     command = [
         "ffmpeg",
-        "-hwaccel", "auto",  # Hardware acceleration (if available)
+        "-hwaccel", "auto",  # Enable hardware acceleration if available
         "-i", input_url,     # Input M3U8 file
         "-c:v", "libx264",   # H.264 encoding for best compression and speed
-        "-preset", "fast",   # Fast preset for speed
+        "-preset", "fast",   # Fast encoding preset
         "-threads", "4",     # Multi-threading (adjust based on CPU)
         "-y", output_path    # Overwrite existing files
     ]
@@ -49,8 +50,10 @@ def convert():
     # Run in a separate thread for fast API response
     threading.Thread(target=run_conversion, args=(input_url, output_filename)).start()
     
+    # Get full local file path
+    full_file_path = os.path.join(LOCAL_OUTPUT_DIR, output_filename)
+    
     return jsonify({
         "message": "Conversion started",
-        "output_file": f"{OUTPUT_DIR}/{output_filename}"
+        "output_file": full_file_path  # Full file path on the local machine
     })
-  

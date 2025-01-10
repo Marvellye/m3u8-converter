@@ -1,5 +1,8 @@
-# Use lightweight FFmpeg + Python image
-FROM jrottenberg/ffmpeg:4.4-alpine
+# Use an Alpine-based Python image
+FROM python:3.9-alpine
+
+# Install FFmpeg
+RUN apk add --no-cache ffmpeg
 
 # Set work directory
 WORKDIR /app
@@ -8,7 +11,7 @@ WORKDIR /app
 COPY . /app
 
 # Install dependencies
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Expose Flask port
 EXPOSE 5000

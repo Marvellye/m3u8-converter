@@ -2,5 +2,5 @@
   RUN apt-get update && apt-get install -y ffmpeg
   COPY . /var/www/html/
   WORKDIR /var/www/html
-  RUN mkdir /var/www/html/tmp && chmod 777 /var/www/html/tmp
+  RUN chmod 777 /var/www/html/tmp
   EXPOSE 80

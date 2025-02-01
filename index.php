@@ -1,5 +1,47 @@
 <?php
-  if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+// Check if the request is a GET request and if the 'url' parameter is provided
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['url'])) {
+    $m3u8Link = $_GET['url'];
+
+    // Validate the URL
+    if (filter_var($m3u8Link, FILTER_VALIDATE_URL)) {
+        // Create a unique output file name in the tmp directory
+        $outputFile = 'tmp/' . uniqid('video_', true) . '.mp4';
+        $outputPath = __DIR__ . '/' . $outputFile;
+
+        // Run FFmpeg to convert the M3U8 to MP4
+        $command = "ffmpeg -i '$m3u8Link' -c copy -bsf:a aac_adtstoasc '$outputPath' 2>&1";
+        exec($command, $output, $return_var);
+
+        // Check if the conversion was successful
+        if ($return_var === 0) {
+            // Generate the download link
+            $downloadLink = "https://m3u8-converter.onrender.com/{$outputFile}";
+
+            // Return a JSON response with the download link
+            header('Content-Type: application/json');
+            echo json_encode([
+                'status' => 'success',
+                'url' => $downloadLink
+            ]);
+        } else {
+            // Return a JSON response with the error message
+            header('Content-Type: application/json');
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Conversion failed. Error: ' . implode("\n", $output)
+            ]);
+        }
+    } else {
+        // Return a JSON response for invalid URL
+        header('Content-Type: application/json');
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Invalid URL provided.'
+        ]);
+    }
+} 
+elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $m3u8Link = $_POST['m3u8_link'];
       if (filter_var($m3u8Link, FILTER_VALIDATE_URL)) {
           $outputFile = 'tmp/' . uniqid('video_', true) . '.mp4';

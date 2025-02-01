@@ -74,7 +74,7 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'GET'){
           <button type="submit">Convert</button>
       </form>
   </body>
-  </html>'
+  </html>';
       }
 
     ?>

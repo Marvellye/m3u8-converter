@@ -6,7 +6,7 @@
           $command = "ffmpeg -i '$m3u8Link' -c copy -bsf:a aac_adtstoasc '$outputFile' 2>&1";
           exec($command, $output, $return_var);
           if ($return_var === 0) {
-              $downloadLink = "http://localhost:8080/{$outputFile}";
+              $downloadLink = "https://m3u8-converter.onrender.com/{$outputFile}";
               echo "Conversion successful! Download your file <a href='{$downloadLink}'>here</a>.";
           } else {
               echo "Conversion failed. Error: " . implode("\n", $output);

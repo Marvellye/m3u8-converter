@@ -57,8 +57,9 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
           echo "Invalid URL provided.";
       }
   }
-  ?>
-  <!DOCTYPE html>
+    
+elseif ($_SERVER['REQUEST_METHOD'] === 'GET'){
+ echo'<!DOCTYPE html>
   <html lang="en">
   <head>
       <meta charset="UTF-8">
@@ -73,4 +74,7 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <button type="submit">Convert</button>
       </form>
   </body>
-  </html>
+  </html>'
+      }
+
+    ?>
